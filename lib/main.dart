@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_rbac/crud.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +37,15 @@ class _HomePageState extends State<HomePage> {
       .from('notes')
       .select<List<Map<String, dynamic>>>();
 
+  late CrudData crudData = CrudData();
+  String newTitle = '';
+  String newDescription = '';
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,11 +65,40 @@ class _HomePageState extends State<HomePage> {
               final note = notes[index];
               return ListTile(
                 title: Text(note['title']),
-                leading: Text(note['description']),
+                subtitle: Text(note['description']),
               );
             }),
           );
         },
+      ),
+      floatingActionButton: Container(
+        padding: const EdgeInsets.all(16),
+        width: MediaQuery.of(context).size.width * 0.9,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextField(
+              onChanged: (title) {
+                newTitle = title;
+              },
+              decoration: InputDecoration(label: Text('Title')),
+            ),
+            TextField(
+              onChanged: (desc) {
+                newDescription = desc;
+              },
+              decoration: const InputDecoration(label: Text('Descripton')),
+            ),
+            const SizedBox(height: 10),
+            TextButton(
+              onPressed: () {
+                crudData.addData(newTitle, newDescription, context);
+                setState(() {});
+              },
+              child:const Text('Save'),
+            ),
+          ],
+        ),
       ),
     );
   }
