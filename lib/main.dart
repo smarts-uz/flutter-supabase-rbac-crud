@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_rbac/crud.dart';
+import 'package:supabase_rbac/insert.dart';
+import 'package:supabase_rbac/udpate.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,8 +40,6 @@ class _HomePageState extends State<HomePage> {
       .select<List<Map<String, dynamic>>>();
 
   late CrudData crudData = CrudData();
-  String newTitle = '';
-  String newDescription = '';
 
   @override
   void initState() {
@@ -51,6 +51,24 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Supabase rbac'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (ctx) => const InsertData(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.add),
+          ),
+          IconButton(
+            onPressed: () {
+              setState(() {});
+            },
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
@@ -58,47 +76,39 @@ class _HomePageState extends State<HomePage> {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
+          print('data: ${snapshot.data!}');
           final notes = snapshot.data!;
+          print('notes list: $notes');
           return ListView.builder(
             itemCount: notes.length,
             itemBuilder: ((context, index) {
               final note = notes[index];
-              return ListTile(
-                title: Text(note['title']),
-                subtitle: Text(note['description']),
+              return GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (ctx) => UpdateData(
+                        title: note['title'],
+                        desc: note['description'],
+                      ),
+                    ),
+                  );
+                },
+                child: ListTile(
+                  title: Text(note['title']),
+                  subtitle: Text(note['description']),
+                  trailing: IconButton(
+                    onPressed: () {
+                      crudData.deleteData(notes[index]['id']);
+                      setState(() {});
+                    },
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                  ),
+                ),
               );
             }),
           );
         },
-      ),
-      floatingActionButton: Container(
-        padding: const EdgeInsets.all(16),
-        width: MediaQuery.of(context).size.width * 0.9,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            TextField(
-              onChanged: (title) {
-                newTitle = title;
-              },
-              decoration: InputDecoration(label: Text('Title')),
-            ),
-            TextField(
-              onChanged: (desc) {
-                newDescription = desc;
-              },
-              decoration: const InputDecoration(label: Text('Descripton')),
-            ),
-            const SizedBox(height: 10),
-            TextButton(
-              onPressed: () {
-                crudData.addData(newTitle, newDescription, context);
-                setState(() {});
-              },
-              child:const Text('Save'),
-            ),
-          ],
-        ),
       ),
     );
   }
