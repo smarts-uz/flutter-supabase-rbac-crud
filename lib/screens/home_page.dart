@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_rbac/crud.dart';
-import 'package:supabase_rbac/insert.dart';
-import 'package:supabase_rbac/udpate.dart';
+import 'package:supabase_rbac/screens/insert.dart';
+import 'package:supabase_rbac/screens/udpate.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -63,11 +63,12 @@ class _HomePageState extends State<HomePage> {
           }
           // print('data: ${snapshot.data!}');
           final notes = snapshot.data!;
-          // print('notes list: $notes');
+          print('notes list: $notes');
           return ListView.builder(
             itemCount: notes.length,
             itemBuilder: ((context, index) {
               final note = notes[index];
+              print(note);
               return ListTile(
                 title: Text(note['title']),
                 subtitle: Text(note['description']),

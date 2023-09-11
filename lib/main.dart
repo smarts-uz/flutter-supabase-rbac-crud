@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:supabase_rbac/home_page.dart';
-import 'package:supabase_rbac/sign_up.dart';
-import 'package:supabase_rbac/splashscren.dart';
+import 'package:supabase_rbac/screens/sign_up.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,21 +13,12 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
-
-
-final supabase = Supabase.instance.client;
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Supabase Flutter',
-           initialRoute: '/',
-      routes: <String, WidgetBuilder>{
-        '/': (_) => const SplashPage(),
-        '/login': (_) => const LoginPage(),
-        '/account': (_) => const HomePage(),
-      },
+       home: LoginPage(),
     );
   }
 }
