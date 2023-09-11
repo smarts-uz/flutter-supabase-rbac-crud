@@ -11,10 +11,11 @@ class CrudData {
         content: Text('Saved the Task'),
       ));
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Error'),
-        backgroundColor: Colors.red,
-      ));
+      print('error: $e');
+      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      //   content: Text('Error'),
+      //   backgroundColor: Colors.red,
+      // ));
     }
   }
 

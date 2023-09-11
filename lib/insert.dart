@@ -51,10 +51,11 @@ class _InsertDataState extends State<InsertData> {
             ),
             const SizedBox(height: 50),
             TextButton(
-              onPressed: () {
-                CrudData().addData(title.text, desc.text, context);
-                setState(() {});
-                Navigator.pop(context);
+              onPressed: () async{
+                await CrudData().addData(title.text, desc.text, context);
+                if(context.mounted){
+                  Navigator.pop(context, true);
+                }
               },
               child: const Text('Save'),
             ),
